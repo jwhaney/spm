@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!-- This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/4.0/ -->
+<html lang="en">
+
+<head>
+  <title>Statewide Planning Map</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+  <link rel="stylesheet" href="http://js.arcgis.com/3.16/dijit/themes/claro/claro.css">
+  <link rel="stylesheet" href="http://js.arcgis.com/3.16/esri/css/esri.css">
+  <script src="http://js.arcgis.com/3.16"></script>
+  <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body class="claro">
+  <div id="maskDiv"></div>
+  <div id="releaseNotesDiv">
+    <h1><strong>RELEASE NOTES</strong></h1>
+    <p3>Version 4.2.1 Slovakia</p3>
+    <br>
+    <br>
+    <ul>
+      <li>Added 2015 values to AADT layer</li>
+      <li>Updated Top 100 Congested Roadways layer to 2016 ranks</li>
+      <li>Updated Query Function to use 2015 Inventory Data</li>
+      <li>Updated Future Traffic &#38; Percent Truck with 2015 Data</li>
+    </ul>
+    <br>
+    <br>
+    <button id="btnClose" style="padding: 5px 10px; position:relative; bottom: 30px; " onclick="closeReleaseNotes()"> Close </button>
+  </div>
+  <div id="toc">
+    <div id="tabControl">
+      <table id="tcTabs">
+        <tr align="center">
+          <td class="Tabs" id="tcMap" bgcolor='#6699CC' style="color:white;">Maps</td>
+          <td class="Tabs" id="tcSearch">Search</td>
+          <td class="Tabs" id="tcMeasure">Measure</td>
+          <td class="Tabs" id="tcQuery">Query</td>
+        </tr>
+        <tr>
+          <td class="Tabs" id="tcSketch" colspan=2>Sketch Tool</td>
+          <td class="Tabs" id="tcLegend">Legend</td>
+          <td class="Tabs" id="tcAbout">About</td>
+        </tr>
+      </table>
+    </div>
+    <div id="mapTab">
+      <table id="tocMaps" class="tocTables">
+        <tr><th>Base Maps</th></tr>
+        <tr class="alt"><td class="Basemaps" id='Statewide_Planning_Map' style="color:red;">TxDOT</td></tr>
+        <tr><td class="Basemaps" id='World_Street_Map'>ESRI Streets</td></tr>
+        <tr class="alt"><td class="Basemaps" id='World_Imagery'>Imagery</td></tr>
+        <tr><td class="Basemaps" id='World_Topo_Map'>Topographic</td></tr>
+        <!--
+        <tr class="alt"><td class="Basemaps" id='Canvas/World_Light_Gray_Base'>Gray Canvas</td></tr>
+        <tr><td class="Basemaps" id='NatGeo_World_Map'>National Geographic</td></tr>
+      -->
+    </table>
+    <table id="tocData" class="tocTables">
+      <tr><th>Overlays</th></tr>
+      <tr class="alt"><td class="Overlay" id="CLEAR" style="color:red;">Clear Overlays</td></tr>
+      <tr><td class="Overlay" id='AADT'>AADT</td></tr>
+      <tr class="alt"><td class="Overlay" id='Area_Offices'>Area Offices</td></tr>
+      <tr><td class="Overlay" id='COG'>COG</td></tr>
+      <tr class="alt"><td class="Overlay" id='Control_Section'>Control Section</td></tr>
+      <tr><td class="Overlay" id='Natl_Freight_Network'>Freight Network (FHWA)</td></tr>
+      <tr class="alt"><td class="Overlay" id='TX_Freight_Network'>Freight Network (TxDOT)</td></tr>
+      <tr><td class="Overlay" id='Functional_Classification'>Functional Classification &#38; Urban Areas</td></tr>
+      <tr class="alt"><td class="Overlay" id='Future_Traffic'>Future Traffic &#38; Percent Truck</td></tr>
+      <tr><td class="Overlay" id='Minute_Orders'>Highway Designations</td></tr>
+      <tr class="alt"><td class="Overlay" id='Maintenance_Offices'>Maintenance Office</td></tr>
+      <tr><td class="Overlay" id='MPO'>MPO</td></tr>
+      <tr class="alt"><td class="Overlay" id='NHS'>National Highway System</td></tr>
+      <tr><td class="Overlay" id='Non_Attainment'>Non-Attainment Areas</td></tr>
+      <!-- <tr class="alt"><td class="Overlay" id='Pavement_Conditions'>Pavement Conditions</td></tr> -->
+      <tr class="alt"><td class="Overlay" id='Permanent_Stations'>Permanent Count Stations</td></tr>
+      <tr><td class="Overlay" id='Construction_Scheduled'>Projects - Construction Scheduled</td></tr>
+      <tr class="alt"><td class="Overlay" id='Finalizing_for_Construction'>Projects - Finalizing for Construction</td></tr>
+      <tr><td class="Overlay" id='Under_Development'>Projects - Under Development</td></tr>
+      <tr class="alt"><td class="Overlay" id='Long_Term_Planning'>Projects - Long Term Planning</td></tr>
+      <tr><td class="Overlay" id='Railroads'>Railroads</td></tr>
+      <tr class="alt"><td class="Overlay" id='Reference_Markers'>Reference Markers</td></tr>
+      <tr><td class="Overlay" id='Speed_Limit'>Speed Limits</td></tr>
+      <tr class="alt"><td class="Overlay" id='State_House_Districts'>State House Districts</td></tr>
+      <tr><td class="Overlay" id='State_Senate_Districts'>State Senate Districts</td></tr>
+      <tr class="alt"><td class="Overlay" id='Texas_Trunk'>Texas Trunk System &#38; Urban Areas</td></tr>
+      <tr><td class="Overlay" id='Top_100'>Top 100 Congested Roadways</td></tr>
+      <tr class="alt"><td class="Overlay" id='US_House_Districts'>US House Districts</td></tr>
+      <tr><td class="Overlay" id='Vertical_Clearance'>Vertical Clearance</td></tr>
+    </table>
+  </div>
+  <div id="searchTab">
+    <table class="tocTables">
+      <tr><th>Select layer to search</th></tr>
+      <tr><td>
+        <label class='clickable'><input type="radio" name="option" class="Searcher" id="Texas_City">City</label><br>
+        <label class='clickable'><input type="radio" name="option" class="Searcher" id="TxDOT_Control_Section">Control Section &nbsp;&nbsp; Ex. 002301</label><br>
+        <label class='clickable'><input type="radio" name="option" class="Searcher" id="Texas_County">County</label><br>
+        <label class='clickable'><input type="radio" name="option" class="Searcher" id="TxDOT_District">District</label><br>
+        <label class='clickable'><input type="radio" name="option" class="Searcher" id="OnSystem_Highway">On System Highway<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ex. IH0035, US0083, SH0079<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ex. SL0001, FM2439</label><br>
+          <label class='clickable'><input type="radio" name="option" class="Searcher" id="Top_100_Congested">Top 100<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Enter a Rank (1-100)</label><br>
+        </td></tr>
+        <tr><td>Type name.. then click to zoom.</td></tr>
+        <tr><td><input id="txtSearch" type="text" onfocus="this.value=''" value="Search here..."/></td></tr>
+        <tr><td><div id="searchResults"></div></td></tr>
+      </table>
+    </div>
+    <div id="measureTab">
+      <table class="tocTables">
+        <tr><th>Units</th></tr>
+        <tr><td colspan="2">
+          <label class='clickable'><input type="radio" class="MeasureUnits" name="unitsList" value="Meters" title="Meters"> Meters</label>
+          <br>
+          <label class='clickable'><input type="radio" class="MeasureUnits" name="unitsList" value="Kilometers" title="Kilometers"> Kilometers</label>
+          <br>
+          <label class='clickable'><input type="radio" class="MeasureUnits" name="unitsList" value="Feet" title="Feet"> Feet</label>
+          <br>
+          <label class='clickable'><input id="radMile" type="radio" class="MeasureUnits" name="unitsList" value="Miles" checked="checked" title="Miles"> Miles</label>
+        </td></tr>
+        <tr><td width="100" colspan="2" align="left" id="measuredDistance">0.0</td></tr>
+        <tr><td><button title="Clear Graphics" id="clearMeasure">Clear</button></td></tr>
+      </table>
+    </div>
+    <div id="queryTab">
+      <table class="tocTables">
+        <tr><th colspan=2>Query Inventory Data</th><tr>
+          <tr><td>Route:</td><td><input Class="queryFields" id="rteName" type="text"></td></tr>
+          <tr><td>Attribute:</td><td>
+            <select Class="queryFields" id="attrSelect">
+              <option value="ADT_CUR">AADT</option>
+              <option value="ADT_DESGN">AADT Future</option>
+              <option value="TRK_AADT_PCT">Percent Truck</option>
+              <option value="SPD_MAX">Speed Limit</option>
+              <option value="NUM_LANES">Lanes</option>
+              <option value="ROW_W_USL">ROW Width</option>
+              <option value="SUR_W">Surface Width</option>
+              <option value="RB_WID">Roadbed Width</option>
+              <option value="MED_WID">Median Width</option>
+            </select>
+          </td></tr>
+          <tr><td>Operation:</td><td>
+            <select Class="queryFields" id="opSelect">
+              <option value="opEqual">Equals</option>
+              <option value="opLessThan">Less Than</option>
+              <option value="opGreaterThan">Greater Than</option>
+            </select>
+          </td></tr>
+          <tr><td>Value:</td><td><input Class="queryFields" id="attrValue" type="number" ></td></tr>
+          <tr><td>&nbsp;</td><td align="right"><button id="cmdRunQuery" type="button" value="Run Query">Run Query</button></td>
+            <tr><td colspan=2>Route tips:<br>Format=IH0035,SL0001 etc.<br>Enter * for all routes<br>Enter IH for all Interstates<br>Enter US for all US Highways<br>Enter SH for all State Highways<br><br><div id="queryResults"></div></td></tr>
+          </table>
+        </div>
+        <div id="sketchTab">
+          <table class="tocTables">
+            <tr><th colspan=2>Sketch Planning Tool</th><tr>
+              <tr><td>
+                * Note - This tool is for planning purposes only.  It is not a tool for roadway design or engineering purposes.
+                <br><br>Construction cost estimates are calculated using average project cost by type from August 2003 to August 2013 in 2013 dollars.
+                <br><br>Frontage roads assumed two lanes per direction when selected.
+                <br><br>
+              </td></tr>
+              <tr><td>
+                <label Class="PRJFields" id="lblPrjType">Project Type</label>
+                <select Class="PRJFields" id="selPrjType" name="selPrjType">
+                  <option value="A">New Roadway</option>
+                  <option value="B">Reconstruction</option>
+                </select>
+                <br>
+                <label Class="PRJFields" id="lblAreaType">Area Type</label>
+                <select Class="PRJFields" id="selPrjAreaType" name="selPrjAreaType">
+                  <option value="C">Urban</option>
+                  <option value="D">Rural</option>
+                </select>
+                <br>
+                <label Class="PRJFields" id="lblPrjRouteType">Route Type</label>
+                <select Class="PRJFields" id="selPrjRouteType" name="selPrjRouteType">
+                  <option value="E">Freeway</option>
+                  <option value="F">Arterial</option>
+                  <option value="G">Collector</option>
+                </select>
+                <br>
+                <label Class="PRJFields" id="lblPrjDivided">Configuration</label>
+                <select Class="PRJFields" id="selPrjDividedType" name="selPrjDividedType">
+                  <option value="H">Divided</option>
+                  <option value="I">Undivided</option>
+                </select>
+                <br>
+                <label Class="PRJFields" id="lblPrjFrontageRoads">Frontage Roads</label>
+                <select Class="PRJFields" id="selPrjFrontageRoads" name="selPrjFrontageRoads">
+                  <option value="1">No</option>
+                  <option value="2">Yes</option>
+                </select>
+                <br>
+                <label Class="PRJFields" id="lblPrjLanes">Number of Main Lanes</label>
+                <input Class="PRJFields" type="number" id="txtPrjLanes" name="txtPrjLanes">
+                <br><br>
+                <button id="btnCalcCost" title="Estimate Project Cost">Calculate Cost</button>
+                <button id="btnClearProject" title="Clear Project">Clear</button>
+                <div id="deCostResult"></div>
+              </td></tr>
+            </table>
+          </div>
+          <div id="legendTab">
+            <table class="tocTables">
+              <tr><th align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Map Legend</th><tr>
+                <tr><td>
+                  <div id="legendDiv"></div>
+                  <div id="legendDiv2"></div>
+                </td><tr>
+                  <tr><td>
+
+                    <br><a id="legendLink" target="_blank" style="display:none"></a>
+                    <br><a id="legendLink2" target="_blank" style="display:none"></a>
+                  </td><tr>
+
+                  </table>
+                </div>
+                <div id="aboutTab">
+                  <table class="tocTables">
+                    <tr><th>Map Disclaimer</th></tr>
+                    <tr><td>The Statewide Planning Map displays data in support of planning operations at TxDOT.
+                      <br><br>Although we try to update information as often as possible, we are not assuming any responsibility for any damages or inaccuracies if you rely on it.
+                      <br><br>We offer no warranty that this application is accurate or complete. The information shown is for informational purposes and may not have been prepared for or be suitable for legal, engineering, or surveying purposes.
+                      <br><br>It does not represent an on-the-ground survey and represents only the approximate relative location of property/administrative boundaries.
+                      <br><br><button type="button" id="btnReleaseNotes">Version 4.2.1 Slovakia</button>
+                    </td></tr>
+                  </table>
+                </div>
+              </div>
+
+              <div id="mapDiv">
+                <span id="info"></span>
+                  <button id="btnClearHighlighter" title="Clear Highlight" style="display:none">
+                    <span>x</span>
+                  </button>
+              </div>
+              <div id="credits">TxDOT, TPP-GIS</div>
+                <div>
+                  <button type="button" id="btnSurvey" style=>Take the Survey</button>
+                </div>
+                <nav>
+                  <ul>
+                    <li><a href="#">Jump To...</a>
+                      <ul>
+                        <li id = "googleLink"><a href="#">Google Maps</a></li>
+                        <li id = "bingLink"><a href="#">Bing Maps</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </nav>
+
+  <script src="js/map.js"></script>
+</body>
+</html>
