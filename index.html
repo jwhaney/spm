@@ -1,51 +1,57 @@
 <!DOCTYPE html>
-<!-- This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/4.0/ -->
-
 <html>
-<head>
-  <title>Statewide Planning Map</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
-  <link rel="stylesheet" href="http://js.arcgis.com/3.18/dijit/themes/claro/claro.css">
-  <link rel="stylesheet" href="http://js.arcgis.com/3.18/esri/css/esri.css">
-  <link rel="stylesheet" href="style/style.css">
-  <script src="http://js.arcgis.com/3.18"></script>
-  <!-- Google Analystics -->
-  <script>
-    (function(i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0];
-      a.async = 1;
-      a.src = g;
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-    ga('create', 'UA-103754009-1', 'auto');
-    ga('send', 'pageview');
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Statewide Planning Map</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/3.21/esri/css/esri.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <script>
+    var dojoConfig = {
+      mblAlwaysHideAddressBar: true
+    };
   </script>
+  <script src="https://js.arcgis.com/3.21compact/"></script>
+  <script src=js/map.js></script>
 </head>
 
-<body class="claro">
-  <div id="maskDiv"></div>
-
-  <div id="overlaysWarningDiv">
-    <h1><strong>Whoops</strong></h1>
-    <p2><strong>2 Overlay Maximum</strong></p3>
-      <br>
-      <br>
-      <p1>Please turn off at least one other overlay in order to turn on another.</p1>
-      <br>
-      <button id="btnClose" style="padding: 5px 10px; position:relative; top: 20px; " onclick="closeOverlaysWarningDiv()">Close</button>
+<body>
+  <div id="mapView" data-dojo-type="dojox.mobile.View" data-dojo-props="selected: true">
+    <div id="header" data-dojo-type="dojox.mobile.Heading">
+      <div id="toolButton" data-dojo-type="dojox.mobile.ToolBarButton" style="float: right;" moveTo="toolView">
+        Tools
+      </div>
+      <div id="layerButton" data-dojo-type="dojox.mobile.ToolBarButton" style="float: right;" moveTo="layerView">
+        Layers
+      </div>
+      <div id="aboutButton" data-dojo-type="dojox.mobile.ToolBarButton" style="float: right;" moveTo="aboutView">
+        About
+      </div>
+    </div>
+    <div id="mapContainer" data-dojo-type="dojox.mobile.ContentPane">
+      <div id="map"></div>
+    </div>
   </div>
-  <div id="releaseNotesDiv">
-    <h1><strong>RELEASE NOTES</strong></h1>
-    <p3>Version 4.4.0 Dart</p3>
-    <ul>
+
+  <div id="aboutView" data-dojo-type="dojox.mobile.View">
+    <h1 data-dojo-type="dojox.mobile.Heading" data-dojo-props="back:'Map', moveTo:'mapView'">About</h1>
+    <br>
+    <!--<img src="img/txdot_logo.png" alt="TxDOT Logo" style="float:left">-->
+    <h3 id="info-main">NOTICE</h3>
+    <p id="info-main">
+      The Statewide Planning Map displays data in support of planning operations at TxDOT. Although we try to update information as often as possible, we are not assuming any responsibility for any damages or inaccuracies if you rely on it. We offer no warranty
+      that this application is accurate or complete. The information shown is for informational purposes and may not have been prepared for or be suitable for legal, engineering, or surveying purposes. It does not represent an on-the-ground survey and
+      represents only the approximate relative location of property/administrative boundaries.
+    </p>
+    <br>
+    <h3 id="info-main">RELEASE NOTES</h3>
+    <h4 id="info-main">Version 4.4.0 Dart</h4>
+    <ul id="info-main">
       <li>Switched to Vector Tile Basemaps</li>
       <li>Brought back the Esri Streets Basemap</li>
       <li>Added Minute Orders to search</li>
@@ -66,333 +72,36 @@
       </ul>
       <li>Various User Interface Improvements and Bug Fixes</li>
     </ul>
-    <button id="btnClose" style="padding: 5px 10px; position:relative; bottom: 5px; " onclick="closeReleaseNotes()">Close</button>
+    <br>
+    <p id="info-main">&copy;2017 TPP GIS</p>
   </div>
-  <div id="toc">
-    <div id="tabControl">
-      <table id="tcTabs">
-        <tr align="center">
-          <td class="Tabs" id="tcMap" bgcolor='#6699CC' style="color:white">Maps</td>
-          <!-- <td class="Tabs" id="tcSearch">Search</td> -->
-          <td class="Tabs" id="tcMeasure">Measure</td>
-          <td class="Tabs" id="tcQuery">Query</td>
-        </tr>
-        <tr>
-          <td class="Tabs" id="tcSketch">Sketch</td>
-          <td class="Tabs" id="tcLegend">Legend</td>
-          <td class="Tabs" id="tcAbout">About</td>
-        </tr>
-      </table>
-    </div>
-    <div id="mapTab">
-      <table id="tocMaps" class="tocTables">
-        <tr>
-          <th>Base Maps</th>
-        </tr>
-        <tr>
-          <td class="Basemaps" id='TxDOT' style="color:red;">TxDOT</td>
-        </tr>
-        <tr>
-          <td class="Basemaps" id='Google'>Google Imagery</td>
-        </tr>
-        <tr>
-          <td class="Basemaps" id='esriLightGray'>Light Gray Basemap</td>
-        </tr>
-        <tr>
-          <td class="Basemaps" id='esriStreets'>Esri Streets Basemap</td>
-        </tr>
-      </table>
-      <table id="tocData" class="tocTables">
-        <tr>
-          <th>Overlays</th>
-        </tr>
-        <tr>
-          <td class="Overlay" id="CLEAR" style="color:red; font-weight: bold;">Clear Overlays</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='AADT'>AADT</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Area_Offices'>Area Offices</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Cemetery'>Cemeteries</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='COG'>Council of Governments (COG)</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Control_Section'>Control Section</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Energy_Sector'>Energy Sector Corridors</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Natl_Freight_Network'>Freight Network (FHWA)</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='TX_Freight_Network'>Freight Network (TxDOT)</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Functional_Classification'>Functional Classification & Urban Areas</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Future_Traffic'>Future Traffic & Percent Truck</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Minute_Orders'>Highway Designations</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Maintenance_Offices'>Maintenance Office</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='MPO'>Metropolitan Planning Organization (MPO)</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='NHS'>National Highway System</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Non_Attainment'>Non-Attainment Areas</td>
-        </tr>
-        <!-- <tr><td class="Overlay" id='Pavement_Conditions'>Pavement Conditions</td></tr> -->
-        <tr>
-          <td class="Overlay" id='Permanent_Stations'>Permanent Count Stations</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Construction_Scheduled'>Projects - Construction Scheduled</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Finalizing_for_Construction'>Projects - Finalizing for Construction</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Under_Development'>Projects - Under Development</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Long_Term_Planning'>Projects - Long Term Planning</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Railroads'>Railroads</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Reference_Markers'>Reference Markers</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='RMA'>Regional Mobility Authority (RMA)</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Roadway_Inventory'>Roadway Inventory - On-System Roadbeds</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Shale_Plays'>Shale Plays and Basins</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Speed_Limit'>Speed Limits</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='State_House_Districts'>State House Districts</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='State_Senate_Districts'>State Senate Districts</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Texas_Trunk'>Texas Trunk System & Urban Areas</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Tolls'>Tolls</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Top_100'>Top 100 Congested Roadways</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='US_House_Districts'>US House Districts</td>
-        </tr>
-        <tr>
-          <td class="Overlay" id='Vertical_Clearance'>Vertical Clearance</td>
-        </tr>
-      </table>
-    </div>
-    <div id="measureTab">
-      <table class="tocTables">
-        <tr>
-          <th>Units</th>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <label class='clickable'><input type="radio" class="MeasureUnits" name="unitsList" value="Meters" title="Meters"> Meters</label>
-            <br>
-            <label class='clickable'><input type="radio" class="MeasureUnits" name="unitsList" value="Kilometers" title="Kilometers"> Kilometers</label>
-            <br>
-            <label class='clickable'><input type="radio" class="MeasureUnits" name="unitsList" value="Feet" title="Feet"> Feet</label>
-            <br>
-            <label class='clickable'><input id="radMile" type="radio" class="MeasureUnits" name="unitsList" value="Miles" checked="checked" title="Miles"> Miles</label>
-          </td>
-        </tr>
-        <tr>
-          <td width="100" colspan="2" align="left" id="measuredDistance">0.0</td>
-        </tr>
-        <tr>
-          <td><button title="Clear Graphics" id="clearMeasure">Clear</button></td>
-        </tr>
-      </table>
-    </div>
-    <div id="queryTab">
-      <table class="tocTables">
-        <tr>
-          <th colspan=2>Query Inventory Data</th>
-          <tr>
-            <tr>
-              <td>Route:</td>
-              <td><input Class="queryFields" id="rteName" type="text"></td>
-            </tr>
-            <tr>
-              <td>Attribute:</td>
-              <td>
-                <select Class="queryFields" id="attrSelect">
-				  <option value="ADT_CUR">AADT</option>
-				  <option value="ADT_DESGN">AADT Future</option>
-				  <option value="TRK_AADT_PCT">Percent Truck</option>
-				  <option value="SPD_MAX">Speed Limit</option>
-				  <option value="NUM_LANES">Lanes</option>
-				  <option value="ROW_W_USL">ROW Width</option>
-				  <option value="SUR_W">Surface Width</option>
-				  <option value="RB_WID">Roadbed Width</option>
-				  <option value="MED_WID">Median Width</option>
-				</select>
-              </td>
-            </tr>
-            <tr>
-              <td>Operation:</td>
-              <td>
-                <select Class="queryFields" id="opSelect">
-				  <option value="opEqual">Equals</option>
-				  <option value="opLessThan">Less Than</option>
-				  <option value="opGreaterThan">Greater Than</option>
-			  </select>
-              </td>
-            </tr>
-            <tr>
-              <td>Value:</td>
-              <td><input Class="queryFields" id="attrValue" type="number"></td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td>
-              <td align="right"><button id="cmdRunQuery" type="button" value="Run Query">Run Query</button></td>
-              <tr>
-                <td colspan=2>Route tips:<br>Format=IH0035,SL0001 etc.<br>Enter * for all routes<br>Enter IH for all Interstates<br>Enter US for all US Highways<br>Enter SH for all State Highways<br><br>
-                  <div id="queryResults"></div>
-                </td>
-              </tr>
-      </table>
-    </div>
-    <div id="sketchTab">
-      <table class="tocTables">
-        <tr>
-          <th colspan=2>Sketch Planning Tool</th>
-          <tr>
-            <tr>
-              <td>
-                * Note - This tool is for planning purposes only. It is not a tool for roadway design or engineering purposes.
-                <br><br>Construction cost estimates are calculated using average project cost by type from August 2003 to August 2013 in 2013 dollars.
-                <br><br>Frontage roads assumed two lanes per direction when selected.
-                <br><br>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label Class="PRJFields" id="lblPrjType">Project Type</label>
-                <select Class="PRJFields" id="selPrjType" name="selPrjType">
-						<option value="A">New Roadway</option>
-						<option value="B">Reconstruction</option>
-					</select>
-                <br>
-                <label Class="PRJFields" id="lblAreaType">Area Type</label>
-                <select Class="PRJFields" id="selPrjAreaType" name="selPrjAreaType">
-						<option value="C">Urban</option>
-						<option value="D">Rural</option>
-					</select>
-                <br>
-                <label Class="PRJFields" id="lblPrjRouteType">Route Type</label>
-                <select Class="PRJFields" id="selPrjRouteType" name="selPrjRouteType">
-						<option value="E">Freeway</option>
-						<option value="F">Arterial</option>
-						<option value="G">Collector</option>
-					</select>
-                <br>
-                <label Class="PRJFields" id="lblPrjDivided">Configuration</label>
-                <select Class="PRJFields" id="selPrjDividedType" name="selPrjDividedType">
-						<option value="H">Divided</option>
-						<option value="I">Undivided</option>
-					</select>
-                <br>
-                <label Class="PRJFields" id="lblPrjFrontageRoads">Frontage Roads</label>
-                <select Class="PRJFields" id="selPrjFrontageRoads" name="selPrjFrontageRoads">
-						<option value="1">No</option>
-						<option value="2">Yes</option>
-					</select>
-                <br>
-                <label Class="PRJFields" id="lblPrjLanes">Number of Main Lanes</label>
-                <input Class="PRJFields" type="number" id="txtPrjLanes" name="txtPrjLanes">
-                <br><br>
-                <button id="btnCalcCost" title="Estimate Project Cost">Calculate Cost</button>
-                <button id="btnClearProject" title="Clear Project">Clear</button>
-                <div id="deCostResult"></div>
-              </td>
-            </tr>
-      </table>
-    </div>
-    <div id="legendTab">
-      <table class="tocTables">
-        <tr>
-          <th align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Map Legend</th>
-          <tr>
-            <tr>
-              <td>
-                <div id="legendDiv"></div>
-                <div id="legendNotesDiv" style="display:none"><b>NOTES:</b></div>
-                <div id="legendDescDiv"></div>
-              </td>
-              <tr>
-      </table>
-    </div>
-    <div id="aboutTab">
-      <table class="tocTables">
-        <tr>
-          <th>Map Disclaimer</th>
-          <tr>
-            <tr>
-              <td>The Statewide Planning Map displays data in support of planning operations at TxDOT.
-                <br><br>Although we try to update information as often as possible, we are not assuming any responsibility for any damages or inaccuracies if you rely on it.
-                <br><br>We offer no warranty that this application is accurate or complete. The information shown is for informational purposes and may not have been prepared for or be suitable for legal, engineering, or surveying purposes.
-                <br><br>It does not represent an on-the-ground survey and represents only the approximate relative location of property/administrative boundaries.
-                <br><br><button type="button" id="btnReleaseNotes">Version 4.4.0 Dart</button>
-              </td>
-              <tr>
-      </table>
-    </div>
-  </div>
-  <div id="search"></div>
-  <div id="mapDiv">
-    <span id="info"></span>
-    <button id="btnClearHighlighter" title="Clear Highlight" style="display:none">
-	 	<span>x</span>
-	 </button>
-  </div>
-  <div id="credits"></div>
-  <!-- <div>
-	<button type="button" id="btnSurvey" style=>Take the Survey</button>
-</div>	 -->
-  <nav>
-    <ul>
-      <li><a href="#">Jump To...</a>
-        <ul>
-          <li id="googleLink"><a href="#">Google Maps</a></li>
-          <li id="bingLink"><a href="#">Bing Maps</a></li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
 
-  <script src="js/map.js"></script>
+  <div id="layerView" data-dojo-type="dojox.mobile.View">
+    <h1 data-dojo-type="dojox.mobile.Heading" data-dojo-props="back:'Map', moveTo:'mapView'">Layers</h1>
+    <br>
+    <h3 id="info-main">NOTICE</h3>
+    <p id="info-main">
+      The Statewide Planning Map displays data in support of planning operations at TxDOT. Although we try to update information as often as possible, we are not assuming any responsibility for any damages or inaccuracies if you rely on it. We offer no warranty
+      that this application is accurate or complete. The information shown is for informational purposes and may not have been prepared for or be suitable for legal, engineering, or surveying purposes. It does not represent an on-the-ground survey and
+      represents only the approximate relative location of property/administrative boundaries.
+    </p>
+    <br>
+    <p id="info-main">&copy;2017 TPP GIS</p>
+  </div>
+
+  <div id="toolView" data-dojo-type="dojox.mobile.View">
+    <h1 data-dojo-type="dojox.mobile.Heading" data-dojo-props="back:'Map', moveTo:'mapView'">Tools</h1>
+    <br>
+    <h3 id="info-main">NOTICE</h3>
+    <p id="info-main">
+      The Statewide Planning Map displays data in support of planning operations at TxDOT. Although we try to update information as often as possible, we are not assuming any responsibility for any damages or inaccuracies if you rely on it. We offer no warranty
+      that this application is accurate or complete. The information shown is for informational purposes and may not have been prepared for or be suitable for legal, engineering, or surveying purposes. It does not represent an on-the-ground survey and
+      represents only the approximate relative location of property/administrative boundaries.
+    </p>
+    <br>
+    <p id="info-main">&copy;2017 TPP GIS</p>
+  </div>
 
 </body>
+
 </html>
