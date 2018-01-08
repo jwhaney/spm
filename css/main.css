@@ -25,3 +25,11 @@ img.center {
   text-align:center;
   vertical-align:middle;
 }
+
+#title {
+  padding-left: 2%;
+  font-size: small;
+  font-style: bold;
+  font-family: "Times New Roman", Times, serif;
+  color: #14385c;
+}
